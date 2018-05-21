@@ -7,7 +7,7 @@ namespace ZXing.Net.Mobile.Forms
 {
     public class ZXingScannerView : View
     {
-        public delegate void ScanResultDelegate (ZXing.Result result);
+        public delegate void ScanResultDelegate (ZXing.Result[] results);
         public event ScanResultDelegate OnScanResult;
 
         public event Action<int, int> AutoFocusRequested;
@@ -18,11 +18,11 @@ namespace ZXing.Net.Mobile.Forms
             HorizontalOptions = LayoutOptions.FillAndExpand;
         }
 
-        public void RaiseScanResult (Result result)
+        public void RaiseScanResult (Result[] results)
         {
-            Result = result;
-            OnScanResult?.Invoke( Result );
-            ScanResultCommand?.Execute( Result );
+            Results = results;
+            OnScanResult?.Invoke( Results );
+            ScanResultCommand?.Execute( Results );
         }
 
 
@@ -80,10 +80,10 @@ namespace ZXing.Net.Mobile.Forms
         }
 
         public static readonly BindableProperty ResultProperty =
-            BindableProperty.Create( nameof( Result ), typeof( Result ), typeof( ZXingScannerView ), default( Result ) );
-        public Result Result
+            BindableProperty.Create( nameof( Results ), typeof( Result[] ), typeof( ZXingScannerView ), default( Result ) );
+        public Result[] Results
         {
-            get { return ( Result )GetValue( ResultProperty ); }
+            get { return ( Result[] )GetValue( ResultProperty ); }
             set { SetValue( ResultProperty, value ); }
         }
 

@@ -23,7 +23,7 @@ namespace ZXing.Mobile.CameraAccess
             Torch = new Torch(_cameraController, surfaceView.Context);
         }
 
-        public event EventHandler<Result> BarcodeFound;
+        public event EventHandler<Result[]> BarcodeFound;
 
         public Torch Torch { get; }
 
@@ -136,14 +136,14 @@ namespace ZXing.Mobile.CameraAccess
                 newHeight = width;
             }
 
-            ZXing.Result result = null;
+            ZXing.Result[] result = null;
             var start = PerformanceCounter.Start();
 
             LuminanceSource fast = new FastJavaByteArrayYUVLuminanceSource(fastArray, width, height, 0, 0, width, height); // _area.Left, _area.Top, _area.Width, _area.Height);
             if (rotate)
                 fast = fast.rotateCounterClockwise();
 
-            result = barcodeReader.Decode(fast);
+            result = barcodeReader.DecodeMultiple(fast);
 
             fastArray.Dispose();
             fastArray = null;

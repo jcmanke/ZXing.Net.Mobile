@@ -28,7 +28,7 @@ namespace FormsSample
                     zxing.IsAnalyzing = false;
 
                     // Show an alert
-                    await DisplayAlert ("Scanned Barcode", result.Text, "OK");
+                    await DisplayAlert ("Scanned Barcodes", string.Join(", ", result.Select(r => r.Text)), "OK");
 
                     // Navigate away
                     await Navigation.PopAsync ();

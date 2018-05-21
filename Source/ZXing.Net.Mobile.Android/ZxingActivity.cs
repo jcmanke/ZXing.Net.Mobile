@@ -29,7 +29,7 @@ namespace ZXing.Mobile
             Android.Manifest.Permission.Flashlight
         };
 
-        public static Action<ZXing.Result> ScanCompletedHandler;
+        public static Action<ZXing.Result[]> ScanCompletedHandler;
         public static Action CanceledHandler;
 
         public static Action CancelRequestedHandler;
@@ -135,10 +135,10 @@ namespace ZXing.Mobile
 
         void StartScanning ()
         {
-            scannerFragment.StartScanning (result => {
+            scannerFragment.StartScanning (results => {
                 var h = ScanCompletedHandler;
                 if (h != null)
-                    h (result);
+                    h (results);
 
                 if (!ZxingActivity.ScanContinuously)
                     this.Finish ();

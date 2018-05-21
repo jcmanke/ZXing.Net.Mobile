@@ -41,7 +41,7 @@ namespace ZXing.Mobile
 		AVCaptureVideoDataOutput output;
 		OutputRecorder outputRecorder;
 		DispatchQueue queue;
-		Action<ZXing.Result> resultCallback;
+		Action<ZXing.Result[]> resultCallback;
 		volatile bool stopped = true;
 
 		UIView layerView;
@@ -282,13 +282,13 @@ namespace ZXing.Mobile
 
 					if (shouldRotatePreviewBuffer)
 						ls = ls.rotateCounterClockwise();
-					
-					var result = barcodeReader.Decode(ls);
+                    
+					var results = barcodeReader.DecodeMultiple(ls);
 
 					PerformanceCounter.Stop(perfDecode, "Decode Time: {0} ms");
 
-                    if (result != null) {
-						resultCallback(result);
+                    if (results != null) {
+						resultCallback(results);
                         return true;
                     }
 				}
@@ -517,7 +517,7 @@ namespace ZXing.Mobile
 		}
 	
 		#region IZXingScanner implementation
-        public void StartScanning (Action<Result> scanResultHandler, MobileBarcodeScanningOptions options = null)
+        public void StartScanning (Action<Result[]> scanResultHandler, MobileBarcodeScanningOptions options = null)
 		{
 			if (!stopped)
 				return;

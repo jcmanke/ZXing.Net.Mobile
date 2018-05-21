@@ -25,12 +25,12 @@ namespace FormsSample
             };
             buttonScanDefaultOverlay.Clicked += async delegate {
                 scanPage = new ZXingScannerPage ();
-                scanPage.OnScanResult += (result) => {
+                scanPage.OnScanResult += (results) => {
                     scanPage.IsScanning = false;
 
                     Device.BeginInvokeOnMainThread (() => {
                         Navigation.PopAsync ();
-                        DisplayAlert("Scanned Barcode", result.Text, "OK");
+                        DisplayAlert("Scanned Barcodes", string.Join(", ", results.Select(r => r.Text)), "OK");
                     });
                 };
 
@@ -57,13 +57,13 @@ namespace FormsSample
                 customOverlay.Children.Add (torch);
 
 				scanPage = new ZXingScannerPage (new ZXing.Mobile.MobileBarcodeScanningOptions { AutoRotate = true }, customOverlay: customOverlay);
-                scanPage.OnScanResult += (result) => {
+                scanPage.OnScanResult += (results) => {
                     scanPage.IsScanning = false;
 
                     Device.BeginInvokeOnMainThread(() =>
                     {
                         Navigation.PopAsync();
-                        DisplayAlert("Scanned Barcode", result.Text, "OK");
+                        DisplayAlert("Scanned Barcodes", string.Join(", ", results.Select(r => r.Text)), "OK");
                     });
                 };
                 await Navigation.PushAsync (scanPage);
@@ -76,10 +76,10 @@ namespace FormsSample
             };
             buttonScanContinuously.Clicked += async delegate {
 				scanPage = new ZXingScannerPage(new ZXing.Mobile.MobileBarcodeScanningOptions { DelayBetweenContinuousScans = 3000 });
-                scanPage.OnScanResult += (result) =>
-                    Device.BeginInvokeOnMainThread (() => 
-                        DisplayAlert ("Scanned Barcode", result.Text, "OK"));
-                
+                scanPage.OnScanResult += (results) =>
+                    Device.BeginInvokeOnMainThread (() =>
+                        DisplayAlert("Scanned Barcodes", string.Join(", ", results.Select(r => r.Text)), "OK"));
+
                 await Navigation.PushAsync (scanPage);
             };
 

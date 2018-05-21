@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using Xamarin.Forms;
 using ZXing.Net.Mobile.Forms;
 
@@ -38,15 +39,23 @@ namespace FormsSample
             System.Diagnostics.Debug.WriteLine ("Scanning " + expectedFormat);
 
             var scanPage = new ZXingScannerPage (opts);
-            scanPage.OnScanResult += (result) => {
+            scanPage.OnScanResult += (results) => {
                 scanPage.IsScanning = false;
 
-                Device.BeginInvokeOnMainThread (() => {
-                    var format = result?.BarcodeFormat.ToString () ?? string.Empty;
-                    var value = result?.Text ?? string.Empty;
+                Device.BeginInvokeOnMainThread (() =>
+                {
+                    var builder = new StringBuilder();
+
+                    foreach (var result in results)
+                    {
+                        var format = result?.BarcodeFormat.ToString() ?? string.Empty;
+                        var value = result?.Text ?? string.Empty;
+
+                        builder.AppendLine(format + "|" + value);
+                    }
 
                     MainPage.Navigation.PopAsync ();
-                    MainPage.DisplayAlert ("Barcode Result", format + "|" + value, "OK");
+                    MainPage.DisplayAlert ("Barcode Results", builder.ToString(), "OK");
                 });
             };
 
