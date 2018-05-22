@@ -135,15 +135,26 @@ namespace ZXing.Mobile.CameraAccess
                 newWidth = height;
                 newHeight = width;
             }
-
-            ZXing.Result[] result = null;
+            
             var start = PerformanceCounter.Start();
 
             LuminanceSource fast = new FastJavaByteArrayYUVLuminanceSource(fastArray, width, height, 0, 0, width, height); // _area.Left, _area.Top, _area.Width, _area.Height);
             if (rotate)
                 fast = fast.rotateCounterClockwise();
 
-            result = barcodeReader.DecodeMultiple(fast);
+            Result[] results = null;
+            if (_scannerHost.ScanningOptions.DecodeMultiple)
+            {
+                results = barcodeReader.DecodeMultiple(fast);
+            }
+            else
+            {
+                var result = barcodeReader.Decode(fast);
+                if (result != null)
+                {
+                    results = new[] { result };
+                }
+            }
 
             fastArray.Dispose();
             fastArray = null;
@@ -152,12 +163,12 @@ namespace ZXing.Mobile.CameraAccess
                 "Decode Time: {0} ms (width: " + width + ", height: " + height + ", degrees: " + cDegrees + ", rotate: " +
                 rotate + ")");
 
-            if (result != null)
+            if (results != null)
             {
                 Android.Util.Log.Debug(MobileBarcodeScanner.TAG, "Barcode Found");
 
                 _wasScanned = true;
-                BarcodeFound?.Invoke(this, result);
+                BarcodeFound?.Invoke(this, results);
                 return;
             }
         }

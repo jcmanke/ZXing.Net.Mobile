@@ -43,6 +43,8 @@ namespace ZXing.Mobile
 		public int DelayBetweenAnalyzingFrames { get;set;}
 		public int InitialDelayBeforeAnalyzingFrames { get;set; }
 
+        public bool DecodeMultiple { get; set; }
+
 		public static MobileBarcodeScanningOptions Default
 		{
 			get { return new MobileBarcodeScanningOptions(); }

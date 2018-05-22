@@ -282,8 +282,20 @@ namespace ZXing.Mobile
 
 					if (shouldRotatePreviewBuffer)
 						ls = ls.rotateCounterClockwise();
-                    
-					var results = barcodeReader.DecodeMultiple(ls);
+
+				    Result[] results = null;
+                    if (ScanningOptions.DecodeMultiple)
+                    {
+                        results = barcodeReader.DecodeMultiple(ls);
+                    }
+                    else
+                    {
+                        var result = barcodeReader.Decode(ls);
+                        if (result != null)
+                        {
+                            results = new[] { result };
+                        }
+                    }
 
 					PerformanceCounter.Stop(perfDecode, "Decode Time: {0} ms");
 
